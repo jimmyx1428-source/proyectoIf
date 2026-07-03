@@ -151,10 +151,10 @@ export function Home() {
     moduloSeleccionado === "todos"
       ? lecturas
       : lecturas.filter(
-          (d) =>
-            Number(d.IdModulo) ===
-            Number(moduloSeleccionado)
-        );
+        (d) =>
+          Number(d.IdModulo) ===
+          Number(moduloSeleccionado)
+      );
 
   const ultimaLecturaFiltrada =
     lecturasFiltradas.length > 0
@@ -452,7 +452,7 @@ export function Home() {
               <div className="alert-status">
 
                 {card.titulo ===
-                "Detección de fuego" ? (
+                  "Detección de fuego" ? (
 
                   ultimaLecturaFiltrada?.detector_llama === 1
                     ? (
@@ -582,15 +582,15 @@ export function Home() {
                   {pieData.map(
                     (entry, index) => (
 
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={
-                        colores[
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={
+                          colores[
                           index % colores.length
-                        ]
-                      }
-                    />
-                  ))}
+                          ]
+                        }
+                      />
+                    ))}
                 </Pie>
 
                 <Tooltip />

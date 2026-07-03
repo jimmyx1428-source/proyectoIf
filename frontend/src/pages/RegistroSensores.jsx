@@ -15,81 +15,81 @@ export function RegistroSensores() {
   const registrosPorPagina = 10;
 
   // listar los datos de los sensores registrados
- useEffect(() => {
+  useEffect(() => {
 
-  const obtenerSensores = async () => {
+    const obtenerSensores = async () => {
 
-    try {
+      try {
 
-      const response = await fetch(`${API_URL}/sensores`);
+        const response = await fetch(`${API_URL}/sensores`);
 
-      const data = await response.json();
+        const data = await response.json();
 
-      if (data) {
+        if (data) {
 
-        const lista = Object.keys(data).map((key) => ({
-          id: key,
-          ...data[key],
-        }));
+          const lista = Object.keys(data).map((key) => ({
+            id: key,
+            ...data[key],
+          }));
 
-        // Ordenar por timestamp
-        const listaOrdenada = lista.sort(
-          (a, b) => b.timestamp - a.timestamp
-        );
+          // Ordenar por timestamp
+          const listaOrdenada = lista.sort(
+            (a, b) => b.timestamp - a.timestamp
+          );
 
-        console.log("Lista Ordenada:", listaOrdenada);
+          console.log("Lista Ordenada:", listaOrdenada);
 
-        setSensores(listaOrdenada);
+          setSensores(listaOrdenada);
 
-      } else {
+        } else {
 
-        setSensores([]);
+          setSensores([]);
+        }
+
+      } catch (error) {
+
+        console.error(error);
       }
+    };
 
-    } catch (error) {
+    obtenerSensores();
 
-      console.error(error);
-    }
-  };
-
-  obtenerSensores();
-
-}, []);
+  }, []);
 
 
   const sensoresFiltrados = sensores.filter((item) => {
     const busqueda = filtro.toLowerCase();
     return (
       (item.IdModulo && item.IdModulo.toString().includes(busqueda))
-     /* (item.temperatura && item.temperatura.toString().includes(busqueda)) ||
-      (item.humedad && item.humedad.toString().includes(busqueda)) ||
-      (item.detector_llama &&
-        item.detector_llama.toString().includes(busqueda)) ||
-      (item.sensor_humo && item.sensor_humo.toString().includes(busqueda))*/
+      /* (item.temperatura && item.temperatura.toString().includes(busqueda)) ||
+       (item.humedad && item.humedad.toString().includes(busqueda)) ||
+       (item.detector_llama &&
+         item.detector_llama.toString().includes(busqueda)) ||
+       (item.sensor_humo && item.sensor_humo.toString().includes(busqueda))*/
     );
   });
 
-const formatFecha = (timestamp) => {
-  let ts = Number(timestamp);   
+  const formatFecha = (timestamp) => {
+    let ts = Number(timestamp);
 
-   if(!ts || isNaN(ts)){//Se validar si el timestamp existe y es numérico
-      ts =  Date.now();
-    }else{
-      if(ts < 1e12){
-        ts = ts*1000; //Convierto a milisegundos
-      }else if (ts > 1e13) {
+    if (!ts || isNaN(ts)) {//Se validar si el timestamp existe y es numérico
+      ts = Date.now();
+    } else {
+      if (ts < 1e12) {
+        ts = ts * 1000; //Convierto a milisegundos
+      } else if (ts > 1e13) {
         ts = Math.floor(ts / 1000);
       }
     }
 
-  const fechaObj = new Date(ts);
-  
-  const fecha = fechaObj.toLocaleDateString("es-CO");
-  const hora = fechaObj.toLocaleTimeString("es-CO", { hour12: false });
-  return { fecha, hora };
-};
+    const fechaObj = new Date(ts);
 
- //paginador
+    const fecha = fechaObj.toLocaleDateString("es-CO");
+    const hora = fechaObj.toLocaleTimeString("es-CO", { hour12: false });
+    return { fecha, hora };
+  };
+
+  //paginador
   const indiceUltimo = paginaActual * registrosPorPagina;
   const indicePrimero = indiceUltimo - registrosPorPagina;
   const registrosPagina = sensoresFiltrados.slice(indicePrimero, indiceUltimo);
@@ -98,7 +98,7 @@ const formatFecha = (timestamp) => {
   return (
     <div className="container mt-4">
       <div className="d-flex align-items-center p-4">
-        <img src="../assets/bar-chart.png" style={{height: '40px', width: '40px', marginRight: '10px'}}/>
+        <img src="../assets/bar-chart.png" style={{ height: '40px', width: '40px', marginRight: '10px' }} />
         <h2 className="mb-0">Registro de Sensores</h2>
       </div>
       <hr />
@@ -179,26 +179,26 @@ const formatFecha = (timestamp) => {
               onClick={() => setPaginaActual((prev) => Math.max(prev - 1, 1))}
               disabled={paginaActual === 1}
             />
-             {(() => {
-                const maxBotones = 10;
-                const inicio = Math.floor((paginaActual - 1) / maxBotones) * maxBotones + 1;
-                const fin = Math.min(inicio + maxBotones - 1, totalPaginas);
+            {(() => {
+              const maxBotones = 10;
+              const inicio = Math.floor((paginaActual - 1) / maxBotones) * maxBotones + 1;
+              const fin = Math.min(inicio + maxBotones - 1, totalPaginas);
 
-                const paginas = [];
-                for (let i = inicio; i <= fin; i++) {
-                  paginas.push(
-                    <Pagination.Item
-                      key={i}
-                      active={i === paginaActual}
-                      onClick={() => setPaginaActual(i)}
-                    >
-                      {i}
-                    </Pagination.Item>
-                  );
-                }
-                return paginas;
-              })()}
-            
+              const paginas = [];
+              for (let i = inicio; i <= fin; i++) {
+                paginas.push(
+                  <Pagination.Item
+                    key={i}
+                    active={i === paginaActual}
+                    onClick={() => setPaginaActual(i)}
+                  >
+                    {i}
+                  </Pagination.Item>
+                );
+              }
+              return paginas;
+            })()}
+
             <Pagination.Next
               onClick={() =>
                 setPaginaActual((prev) =>
